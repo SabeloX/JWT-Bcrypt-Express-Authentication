@@ -1,7 +1,7 @@
-import controllers from '../controllers';
-import { Router } from 'express';
+/**
+ * Export all routes here
+ */
 
-// instance of router for chain of routes
-const router = Router()
+import auth from './authentication.routes';
 
-router.post('/register', controllers.register);
+export default { auth };
