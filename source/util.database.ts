@@ -14,7 +14,7 @@ export const connectDB = async (operation: Function, response: Response) => {
         const database: Db = client.db('secure_api');
 
         //Begin CRUD operation
-        operation(database);
+        await operation(database);
 
         // Close database connection
         client.close();
