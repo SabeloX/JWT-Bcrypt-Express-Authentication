@@ -2,6 +2,9 @@
  * Export all controllers here
  */
 
-import { register } from './authentication.routes';
+import { register } from '../controllers/authentication.controllers';
 
-export default { register };
+// list controllers
+const controllers = { register };
+
+export default controllers;
