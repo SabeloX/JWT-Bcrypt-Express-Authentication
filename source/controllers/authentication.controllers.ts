@@ -10,12 +10,22 @@ import { connectDB } from '../util.database';
  * @returns response
  */
 export const register = (request: Request, response: Response, next: Function) => {
-    connectDB( async (database: Db) => {
-        const user = await database.collection('users').insertOne({
-            username: request.body.username,
-            password: request.body.password
-        });
+    const {username, password} = request.body;
+    if(username && password){
+        connectDB( async (database: Db) => {
 
-        response.status(200).send(user);
-    }, response);
+            //check if user exists in the database
+            const user = await database.collection('users').findOne({ username: request.body.username });
+
+            if(!user){
+                const newUser = await database.collection('users').insertOne({
+                    username: request.body.username,
+                    password: request.body.password
+                });
+                response.status(200).send(newUser);
+            }
+            response.status(403).send({ message: `User already exists` });
+        }, response);
+    }
+    response.status(400).send({ message: `Cannot submit a blank username/password` });
 }
