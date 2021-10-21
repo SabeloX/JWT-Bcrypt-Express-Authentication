@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -p . && nodemon -r dotenv/config ./dist/server"
+    "start": "tsc -p . && nodemon -r dotenv/config ./source/server.ts"
   },
   "keywords": [],
   "author": "",
