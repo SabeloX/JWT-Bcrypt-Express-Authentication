@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Db } from 'mongodb';
-import { connectDB } from '../util.database';
+import { connectDB } from '../../util.database';
 
 /**
  * Register a new user
@@ -9,10 +9,10 @@ import { connectDB } from '../util.database';
  * @param next middleware function for error
  * @returns response
  */
-export const register = (request: Request, response: Response, next: Function) => {
+export const register = async (request: Request, response: Response) => {
     const {username, password} = request.body;
     if(username && password){
-        connectDB( async (database: Db) => {
+        await connectDB( async (database: Db) => {
 
             //check if user exists in the database
             const user = await database.collection('users').findOne({ username });
@@ -33,10 +33,11 @@ export const register = (request: Request, response: Response, next: Function) =
  * @param response 
  * @param next 
  */
-export const login = (request: Request, response: Response, next: Function) => {
+export const login = async (request: Request, response: Response) => {
     const {username, password} = request.body;
-    if(username && password){
-        connectDB( async (database: Db) => {
+    console.log(username, password)
+    if(username !== null && password !== null){
+        await connectDB( async (database: Db) => {
             //check if user exists in the database
             const user = await database.collection('users').findOne({ username });
             if(!user){

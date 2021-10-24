@@ -12,7 +12,7 @@ export const connectDB = async (operation: Function, response: Response) => {
     try{
         const client = await MongoClient.connect(databaseURL);
         const database: Db = client.db('secure_api');
-
+        console.log('Connected to the database!');
         //Begin CRUD operation
         await operation(database);
 
@@ -20,6 +20,7 @@ export const connectDB = async (operation: Function, response: Response) => {
         client.close();
     }
     catch(error){
+        console.log('Cannot connect to the database.');
         response.status(500).send({ message: `Error while connecting to the database.\n ${error}`});
     }
 }
