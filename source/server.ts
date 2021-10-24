@@ -9,7 +9,7 @@ app.use(json());    // allow server to read JSON format data
 app.use(cors());    // enable CORS for all requests
 
 // Routes
-app.use('/api/users', router.auth);
+app.use('/api/users', router.auth, router.users);
 
 // listen for the server on PORT
 app.listen(PORT, () => console.log(`Server Running in http://localhost:${PORT}`));

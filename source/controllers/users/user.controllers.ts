@@ -2,13 +2,15 @@ import { Request, Response } from 'express';
 import { Db } from 'mongodb';
 import { connectDB } from '../../util.database';
 
+/**
+ * Get all users
+ * @param request 
+ * @param response 
+ */
 export const getUsers = async (request: Request, response: Response) => {
     await connectDB( async (database: Db) => {
-        const users = await database.collection('users').find();
-        console.log(users);
-        if(users){
-            return response.status(200).send(users);
-        }
-        return response.status(404).send({ message: "No Users Found"});
+        const usersSnapshot = database.collection('users').find();
+        const userDocuments = await usersSnapshot.toArray();
+        return response.status(200).json(userDocuments);
     }, response);
 }
