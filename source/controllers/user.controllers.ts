@@ -1,6 +1,7 @@
-import { request, Request, Response } from 'express';
-import { Db } from 'mongodb';
-import { connectDB } from '../util.database';
+import { Request, Response } from 'express';
+import database from '../models';
+
+const { User } = database;
 
 /**
  * Get all users
@@ -8,11 +9,13 @@ import { connectDB } from '../util.database';
  * @param response 
  */
 export const getUsers = async (request: Request, response: Response) => {
-    await connectDB( async (database: Db) => {
-        const usersSnapshot = database.collection('users').find();
-        const userDocuments = await usersSnapshot.toArray();
-        return response.status(200).json(userDocuments);
-    }, response);
+    try{
+        const users = await User.find();
+        return response.status(200).json(users);
+    }
+    catch(error){
+        return response.status(500).json({ message: "Internal Server Error!" });
+    }
 }
 
 /**
@@ -21,11 +24,20 @@ export const getUsers = async (request: Request, response: Response) => {
  * @param response 
  */
 export const getUser = async (request: Request, response: Response) =>{
-    await connectDB( async (database: Db) =>{
-        const user = await database.collection('users').findOne({ username: request.params.username });
+    try{
+        const username = request.params.username;
+
+        if(!username){
+            return response.status(400).json({ message: "Username Required!" });
+        }
+        const user = await User.findOne({ username });
+
         if(!user){
-            return response.status(404).json({error: "Incorrenct Username"});
+            return response.status(404).json({ message: "User not found!" });
         }
         return response.status(200).json(user);
-    }, response);
+    }
+    catch(error){
+        return response.status(500).json({ message: "Internal Server Error!" });
+    }
 }
