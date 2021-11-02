@@ -44,13 +44,20 @@ export const register = async (request: Request, response: Response) => {
 export const login = async (request: Request, response: Response) => {
     try{
         const {username, password} = request.body;
+        if(username.length === 0 || password.length === 0){
+            return response.status(400).json({ message: "Username/password Required!" })
+        }
         const user = await User.findOne({ username });
 
         if(!user) return response.status(404).json({ message: 'User not found!', status: 404 });
 
+        const matched = await bcrypt.compare(password, user.password)
+        if(!matched){
+            return response.status(403).json({ message: "Access Denied!" });
+        }
         return response.status(201).json(user);
     }
     catch(error){
-        return response.status(500).json(error);
+        return response.status(500).json({ message: "Internal Server Error!" });
     }
 }
