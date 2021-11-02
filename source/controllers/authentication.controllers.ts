@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import database from '../models';
 import bcrypt from 'bcrypt';
+import JWT from 'jsonwebtoken';
 
 const { User } = database;
 
@@ -55,7 +56,8 @@ export const login = async (request: Request, response: Response) => {
         if(!matched){
             return response.status(403).json({ message: "Access Denied!" });
         }
-        return response.status(201).json(user);
+        const token = JWT.sign({ username, role: user.role }, process.env.TOKEN_SECRET as string)
+        return response.status(201).json({ user, token });
     }
     catch(error){
         return response.status(500).json({ message: "Internal Server Error!" });
