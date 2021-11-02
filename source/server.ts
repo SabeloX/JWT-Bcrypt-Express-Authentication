@@ -13,6 +13,9 @@ app.use(cors());    // enable CORS for all requests
 // Routes
 app.use('/api/users', router.auth, router.users);
 
+mongoose.Promise = global.Promise;
+mongoose.set('debug', true);
+
 mongoose.connect(databaseURL, (error) => {
     if(error) console.log('Cannot Connect to the database');
     else console.log('Connected to the database!');
