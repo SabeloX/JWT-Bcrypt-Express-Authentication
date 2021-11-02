@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { Db } from 'mongodb';
-import { connectDB } from '../util.database';
+import database from '../models';
+import bcrypt from 'bcrypt';
+
+const { User } = database;
 
 /**
  * Register a new user
@@ -10,21 +12,27 @@ import { connectDB } from '../util.database';
  * @returns response
  */
 export const register = async (request: Request, response: Response) => {
-    const {username, password} = request.body;
-    if(username && password){
-        await connectDB( async (database: Db) => {
-
-            //check if user exists in the database
-            const user = await database.collection('users').findOne({ username });
-
-            if(!user){
-                const newUser = await database.collection('users').insertOne({ username, password });
-                response.status(200).send(newUser);
-            }
-            response.status(403).send({ message: `User already exists` });
-        }, response);
+    try{
+        const { username, password } = request.body;
+        const user = new User({ username, password });
+        user.save()
+        .then( async (userDoc) => {
+            const salt = await bcrypt.genSalt(10);
+            const encrypedPassword = await bcrypt.hash(password, salt);
+            user.password = encrypedPassword;
+            user.save()
+            .then(userDoc => {
+                return response.status(201).json(userDoc);
+            })
+        })
+        .catch(error => {
+            if(error.code === 11000) return response.status(403).json({ message: "User already exists!" });
+            return response.status(400).json({ message: "At least 6 username/password characters required!", error });
+        })
     }
-    response.status(400).send({ message: `Cannot submit a blank username/password` });
+    catch(error){
+        return response.status(500).json({ message: 'Internal Server Error', status: 500 });
+    }
 }
 
 /**
@@ -34,23 +42,15 @@ export const register = async (request: Request, response: Response) => {
  * @param next 
  */
 export const login = async (request: Request, response: Response) => {
-    const {username, password} = request.body;
-    console.log(username, password)
-    if(username !== null && password !== null){
-        await connectDB( async (database: Db) => {
-            //check if user exists in the database
-            const user = await database.collection('users').findOne({ username });
-            if(!user){
-                response.status(401).send({ message: `Incorrect username/password` });
-            }
-            else{
-                if(user.password === password){
-                    response.status(200).send(user);
-                }
-                response.status(401).send({ message: `Incorrect username/password`});
-            }
+    try{
+        const {username, password} = request.body;
+        const user = await User.findOne({ username });
 
-        }, response);
+        if(!user) return response.status(404).json({ message: 'User not found!', status: 404 });
+
+        return response.status(201).json(user);
     }
-    response.status(400).send({ message: `Cannot submit a blank username/password` });
+    catch(error){
+        return response.status(500).json(error);
+    }
 }
