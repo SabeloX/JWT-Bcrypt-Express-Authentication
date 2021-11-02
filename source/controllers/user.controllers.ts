@@ -1,6 +1,6 @@
 import { request, Request, Response } from 'express';
 import { Db } from 'mongodb';
-import { connectDB } from '../../util.database';
+import { connectDB } from '../util.database';
 
 /**
  * Get all users

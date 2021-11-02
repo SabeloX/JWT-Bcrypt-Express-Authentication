@@ -2,7 +2,7 @@
  * Export all routes here
  */
 
-import auth from './users/authentication.routes';
-import users from './users/user.routes';
+import auth from './authentication.routes';
+import users from './user.routes';
 
 export default { auth, users };

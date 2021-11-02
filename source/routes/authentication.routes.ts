@@ -1,4 +1,4 @@
-import controllers from '../../controllers';
+import controllers from '../controllers';
 import { Router } from 'express';
 
 // instance of router for chain of routes
