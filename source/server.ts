@@ -24,3 +24,5 @@ mongoose.connect(databaseURL, (error) => {
 
 // listen for the server on PORT
 app.listen(PORT, () => console.log(`Server Running in http://localhost:${PORT}`));
+
+export default app;
