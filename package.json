@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -p . && nodemon -r dotenv/config ./source/server.ts"
+    "start": "tsc -p . && nodemon -r dotenv/config ./source/server.ts",
+    "test": "mocha -r ts-node/register ./tests/*.spec.ts"
   },
   "keywords": [],
   "author": "",
