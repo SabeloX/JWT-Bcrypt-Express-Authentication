@@ -1,6 +1,6 @@
 /**Development Configuration for Evironment Variables */
 export default {
-    port: 3000,
-    database: 'mongodb://127.0.0.1:27017/secure_api',
+    port: process.env.PORT,
+    database: process.env.DATABASE,
     tokenSecret: process.env.TOKEN_SECRET
 }
