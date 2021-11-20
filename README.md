@@ -5,7 +5,8 @@ This is NodeJS Project built with:
   * MongoDB for the database to hold user information
   * JWT for secure communication between the server and client(s)
   * Bcrypt to encrypt the password
-  
+  * Chai & Mocha For Testing
+
 ## Contributing
 
   1. Fork the repo on GitHub
