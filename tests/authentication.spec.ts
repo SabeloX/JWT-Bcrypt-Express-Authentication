@@ -3,9 +3,12 @@ import chaiHttp from 'chai-http';
 import app from '../source/server';
 import { connect } from 'mongoose';
 import database from '../source/models/index';
+import testingConfig from '../source/configuration/testing.config';
+
+process.env.NODE_ENV = 'testing';
 
 /**Database URL */
-const dbURL = 'mongodb://127.0.0.1:27017/secure_api_test'
+const dbURL = testingConfig.database
 
 /** Configure Chai */
 use(chaiHttp);
@@ -38,7 +41,9 @@ describe('Authentication Tests', () => {
             .post('/api/users/register')
             .send(body)
             .then(res => {
-                expect(res.status).to.equal(201)
+                console.log(res.body);
+                expect(res.status).to.equal(201);
+                // expect(res.body).to.
                 done()
             })
             .catch(err => {
