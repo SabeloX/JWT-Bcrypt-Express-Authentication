@@ -21,7 +21,7 @@ describe('Authentication Tests', () => {
     )
 
     /**Before the tests clear the database */
-    beforeEach(done => {
+    before(done => {
         database.User.remove({}, (err) => {
             done()
         })
@@ -41,7 +41,7 @@ describe('Authentication Tests', () => {
             .then(res => {
                 console.log(res.body);
                 expect(res.status).to.equal(201);
-                // expect(res.body).to.
+                // expect(res.body).to.have.
                 done()
             })
             .catch(err => {
