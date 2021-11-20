@@ -5,10 +5,8 @@ import { connect } from 'mongoose';
 import database from '../source/models/index';
 import testingConfig from '../source/configuration/testing.config';
 
-process.env.NODE_ENV = 'testing';
-
-/**Database URL */
-const dbURL = testingConfig.database
+/**Testing Database URL */
+const dbURL = testingConfig.database || '';
 
 /** Configure Chai */
 use(chaiHttp);
