@@ -39,7 +39,6 @@ describe('Authentication Tests', () => {
             .post('/api/users/register')
             .send(body)
             .then(res => {
-                console.log(res.body);
                 expect(res.status).to.equal(201);
                 // expect(res.body).to.have.
                 done()
@@ -60,7 +59,28 @@ describe('Authentication Tests', () => {
             .post(`/api/users/register`)
             .send(body)
             .then(res => {
-                expect(res.status).to.equal(403)
+                expect(res.body.message).to.equal('User already exists!');
+                expect(res.status).to.equal(403);
+                done()
+            })
+            .catch(err => {
+                console.log(err);
+                done()
+            })
+        })
+
+        /**Bad Format - Less characters on username/password */
+        it('Password has less characters than target(6)', (done) => {
+            /**Test register data - already in use */
+            const body = { username: 'xero@sabelo.com', password: 'sabs' };
+
+            /**Test a post request */
+            request(app)
+            .post(`/api/users/register`)
+            .send(body)
+            .then(res => {
+                expect(res.status).to.equal(400);
+                expect(res.body.message).to.equal('At least 6 username/password characters required!');
                 done()
             })
             .catch(err => {
